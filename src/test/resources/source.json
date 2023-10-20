@@ -1,0 +1,24 @@
+{
+  "name": "John",
+  "surname": "Foo",
+  "age": 43,
+  "sex": "MALE",
+  "address": {
+    "street" : "Long Street",
+    "city" : "New York"
+  },
+  "phones": [
+    {
+      "id": "1",
+      "value": "0900555555"
+    },
+    {
+      "id": "2",
+      "value": "0900666666"
+    },
+    {
+      "id": "3",
+      "value": "0900101010"
+    }
+  ]
+}

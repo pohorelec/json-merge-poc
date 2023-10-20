@@ -1,0 +1,19 @@
+{
+  "name": "Karl",
+  "surname": "Boby",
+  "age": 30,
+  "address": {
+    "street" : "Short Street",
+    "city" : "Washington"
+  },
+  "phones": [
+    {
+      "id": "2",
+      "value": "0900111111"
+    },
+    {
+      "id": "1",
+      "value": "0900222222"
+    }
+  ]
+}
