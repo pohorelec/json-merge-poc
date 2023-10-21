@@ -5,5 +5,5 @@ import com.fasterxml.jackson.databind.node.ContainerNode;
 @FunctionalInterface
 public interface RecursiveFunction
 {
-    void execute( ContainerNode<?> sourceParentNode, ContainerNode<?> targetParentNode );
+    void execute( ContainerNode<?> sourceParentNode, ContainerNode<?> targetParentNode, CurrentPath currentPath );
 }

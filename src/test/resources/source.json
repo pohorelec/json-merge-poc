@@ -5,8 +5,17 @@
   "sex": "MALE",
   "address": {
     "street" : "Long Street",
-    "city" : "New York"
+    "city" : "New York",
+    "state": {
+      "code": "AT",
+      "name": "Austria"
+    }
   },
+  "emails": [
+    {
+      "value": "john@foo.com"
+    }
+  ],
   "phones": [
     {
       "id": "1",
@@ -20,5 +29,9 @@
       "id": "3",
       "value": "0900101010"
     }
+  ],
+  "labels": [
+    "bad client",
+    "to many loans"
   ]
 }

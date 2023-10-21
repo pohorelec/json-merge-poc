@@ -1,0 +1,28 @@
+{
+  "name" : "John",
+  "surname" : "Foo",
+  "age" : 43,
+  "address" : {
+    "street" : "Long Street",
+    "city" : "New York",
+    "state" : {
+      "code" : "AT",
+      "name" : "Austria"
+    }
+  },
+  "phones" : [ {
+    "id" : "2",
+    "value" : "0900666666"
+  }, {
+    "id" : "1",
+    "value" : "0900555555"
+  }, {
+    "id" : "3",
+    "value" : "0900101010"
+  } ],
+  "labels" : [ "bad client", "to many loans" ],
+  "sex" : "MALE",
+  "emails" : [ {
+    "value" : "john@foo.com"
+  } ]
+}

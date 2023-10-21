@@ -13,16 +13,17 @@ public class JoinProcessor
     private final List<NodeJoiner> joiners = List.of(
             new ValueNodeJoiner(),
             new ObjectNodeJoiner(),
-            new ArrayNodeJoiner()
+            new ArrayNodeOfObjectsJoiner(),
+            new ArrayNodeOfValuesJoiner()
     );
 
     public JsonNode join( ObjectNode sourceRoot, ObjectNode targetRoot )
     {
-        traverseNode( sourceRoot, targetRoot );
+        traverseNode( sourceRoot, targetRoot, new CurrentPath() );
         return targetRoot;
     }
 
-    private void traverseNode( ContainerNode<?> sourceParentNode, ContainerNode<?> targetParentNode )
+    private void traverseNode( ContainerNode<?> sourceParentNode, ContainerNode<?> targetParentNode, CurrentPath currentPath )
     {
         Iterator<Map.Entry<String, JsonNode>> fields = sourceParentNode.fields();
 
@@ -34,6 +35,9 @@ public class JoinProcessor
             JsonNode sourceNode = currentSourceNodeEntry.getValue();
             JsonNode targetNode = targetParentNode.get( currentName );
 
+            // construct new instance of path
+            CurrentPath currentPathNew = CurrentPath.copy( currentPath ).append( currentName );
+
             joiners.stream()
                     .filter( joiner -> joiner.apply( sourceNode ) )
                     .forEach( joiner -> joiner.join(
@@ -43,7 +47,8 @@ public class JoinProcessor
                                     targetNode,
                                     targetParentNode,
                                     this::traverseNode
-                            ) ) );
+                            ), currentPathNew
+                    ) );
         }
     }
 }

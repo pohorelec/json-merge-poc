@@ -14,7 +14,7 @@ public class ValueNodeJoiner
     }
 
     @Override
-    public void join( NodeJoinerContext context )
+    public void join( NodeJoinerContext context, CurrentPath currentPath )
     {
         ( ( ObjectNode ) context.getTargetParentNode() ).replace( context.getCurrentName(), context.getSourceNode() );
     }

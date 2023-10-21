@@ -6,5 +6,5 @@ public interface NodeJoiner
 {
     boolean apply( JsonNode sourceNode );
 
-    void join( NodeJoinerContext context );
+    void join( NodeJoinerContext context, CurrentPath currentPath );
 }
