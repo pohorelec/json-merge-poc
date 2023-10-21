@@ -24,30 +24,39 @@ public class ArrayNodeOfObjectsJoiner
     @Override
     public void join( NodeJoinerContext context, CurrentPath currentPath )
     {
-        // TODO: implement for REPLACE. For now only MERGE is implemented
-        // TODO: hardcoded - take from 'context.configuration.joiningKeys'
-        // TODO: add check for currentPath - only paths provided by 'context.configuration.joiningPath' should be merged
-        String joiningKey = "id";
+        JoiningPath joiningPath = currentPath.getActive( context.getJoiningPaths() );
 
-        context.getSourceNode()
-                .forEach( childSourceNode -> {
-                    String sourceJoiningKeyValue = Optional.ofNullable( childSourceNode.get( joiningKey ) ).map( JsonNode::asText ).orElse( null );
-                    ArrayNode targetNode = ( ArrayNode ) context.getTargetNode();
+        // --- MERGE
+        if ( joiningPath != null )
+        {
+            context.getSourceNode()
+                    .forEach( childSourceNode -> {
+                        ArrayNode targetNode = ( ArrayNode ) context.getTargetNode();
 
-                    if ( targetNode == null )
-                    {
-                        targetNode = JsonNodeFactory.instance.arrayNode();
-                        ( ( ObjectNode ) context.getTargetParentNode() ).set( context.getCurrentName(), targetNode );
-                    }
+                        if ( targetNode == null )
+                        {
+                            targetNode = JsonNodeFactory.instance.arrayNode();
+                            ( ( ObjectNode ) context.getTargetParentNode() ).set( context.getCurrentName(), targetNode );
+                        }
 
-                    ObjectNode childTargetNode = findChildTargetNode( targetNode, joiningKey, sourceJoiningKeyValue );
+                        String joiningKey = joiningPath.getKeys().get( 0 ); // TODO: implement for each key
+                        String sourceJoiningKeyValue = Optional.ofNullable( childSourceNode.get( joiningKey ) ).map( JsonNode::asText ).orElse( null );
+                        ObjectNode childTargetNode = findChildTargetNode( targetNode, joiningKey, sourceJoiningKeyValue );
 
-                    context.getRecursiveFunction().execute(
-                            ( ObjectNode ) childSourceNode,
-                            childTargetNode,
-                            currentPath
-                    );
-                } );
+                        context.getRecursiveFunction().execute(
+                                ( ObjectNode ) childSourceNode,
+                                childTargetNode,
+                                currentPath,
+                                context.getJoiningPaths()
+                        );
+                    } );
+        }
+
+        // --- REPLACE
+        else
+        {
+            ( ( ObjectNode ) context.getTargetParentNode() ).replace( context.getCurrentName(), context.getSourceNode() );
+        }
     }
 
     private ObjectNode findChildTargetNode( ArrayNode targetNode, String joiningKey, String sourceJoiningKeyValue )

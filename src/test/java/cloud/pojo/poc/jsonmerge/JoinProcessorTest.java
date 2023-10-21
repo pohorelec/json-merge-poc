@@ -9,6 +9,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 class JoinProcessorTest
 {
@@ -22,7 +24,10 @@ class JoinProcessorTest
         ObjectNode source = loadJson( "/source.json" );
         ObjectNode target = loadJson( "/target.json" );
 
-        JsonNode result = processor.join( source, target );
+        List<JoiningPath> joiningPaths = new ArrayList<>();
+        joiningPaths.add( new JoiningPath( "phones", List.of( "id" ) ) );
+
+        JsonNode result = processor.join( source, target, joiningPaths );
 
         String actualResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString( result );
         String expectedResult = mapper.writeValueAsString( loadJson( "/result.json" ) );

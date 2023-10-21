@@ -2,6 +2,8 @@ package cloud.pojo.poc.jsonmerge;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.List;
+
 public class NodeJoinerContext
 {
     private final String currentName;
@@ -14,12 +16,20 @@ public class NodeJoinerContext
 
     private final RecursiveFunction recursiveFunction;
 
-    public NodeJoinerContext( String currentName, JsonNode sourceNode, JsonNode targetNode, JsonNode targetParentNode, RecursiveFunction recursiveFunction )
+    private final List<JoiningPath> joiningPaths;
+
+    public NodeJoinerContext( String currentName,
+                              JsonNode sourceNode,
+                              JsonNode targetNode,
+                              JsonNode targetParentNode,
+                              List<JoiningPath> joiningPaths,
+                              RecursiveFunction recursiveFunction )
     {
         this.currentName = currentName;
         this.sourceNode = sourceNode;
         this.targetNode = targetNode;
         this.targetParentNode = targetParentNode;
+        this.joiningPaths = joiningPaths;
         this.recursiveFunction = recursiveFunction;
     }
 
@@ -41,6 +51,11 @@ public class NodeJoinerContext
     public JsonNode getTargetParentNode()
     {
         return targetParentNode;
+    }
+
+    public List<JoiningPath> getJoiningPaths()
+    {
+        return joiningPaths;
     }
 
     public RecursiveFunction getRecursiveFunction()

@@ -1,6 +1,7 @@
 package cloud.pojo.poc.jsonmerge;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:pohorelec@turnonline.biz">Jozef Pohorelec</a>
@@ -23,6 +24,11 @@ public class CurrentPath
     {
         add( path );
         return this;
+    }
+
+    public JoiningPath getActive( List<JoiningPath> paths )
+    {
+        return paths.stream().filter( p -> p.getPath().equals( toString() ) ).findFirst().orElse( null );
     }
 
     @Override

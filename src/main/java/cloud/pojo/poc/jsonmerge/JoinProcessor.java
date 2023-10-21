@@ -17,13 +17,13 @@ public class JoinProcessor
             new ArrayNodeOfValuesJoiner()
     );
 
-    public JsonNode join( ObjectNode sourceRoot, ObjectNode targetRoot )
+    public JsonNode join( ObjectNode sourceRoot, ObjectNode targetRoot, List<JoiningPath> joiningPaths )
     {
-        traverseNode( sourceRoot, targetRoot, new CurrentPath() );
+        traverseNode( sourceRoot, targetRoot, new CurrentPath(), joiningPaths );
         return targetRoot;
     }
 
-    private void traverseNode( ContainerNode<?> sourceParentNode, ContainerNode<?> targetParentNode, CurrentPath currentPath )
+    private void traverseNode( ContainerNode<?> sourceParentNode, ContainerNode<?> targetParentNode, CurrentPath currentPath, List<JoiningPath> joiningPaths )
     {
         Iterator<Map.Entry<String, JsonNode>> fields = sourceParentNode.fields();
 
@@ -46,6 +46,7 @@ public class JoinProcessor
                                     sourceNode,
                                     targetNode,
                                     targetParentNode,
+                                    joiningPaths,
                                     this::traverseNode
                             ), currentPathNew
                     ) );

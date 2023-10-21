@@ -28,7 +28,8 @@ public class ObjectNodeJoiner
         context.getRecursiveFunction().execute(
                 sourceNode,
                 targetNode,
-                currentPath
+                currentPath,
+                context.getJoiningPaths()
         );
     }
 }
