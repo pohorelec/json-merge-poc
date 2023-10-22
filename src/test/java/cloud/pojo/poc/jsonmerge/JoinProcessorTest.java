@@ -25,7 +25,7 @@ class JoinProcessorTest
         ObjectNode target = loadJson( "/target.json" );
 
         List<JoiningPath> joiningPaths = new ArrayList<>();
-        joiningPaths.add( new JoiningPath( "phones", List.of( "id" ) ) );
+        joiningPaths.add( new JoiningPath( "phones", List.of( "id", "legacyId" ) ) );
 
         JsonNode result = processor.join( source, target, joiningPaths );
 

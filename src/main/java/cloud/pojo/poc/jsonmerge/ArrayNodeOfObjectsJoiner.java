@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -39,9 +41,23 @@ public class ArrayNodeOfObjectsJoiner
                             ( ( ObjectNode ) context.getTargetParentNode() ).set( context.getCurrentName(), targetNode );
                         }
 
-                        String joiningKey = joiningPath.getKeys().get( 0 ); // TODO: implement for each key
-                        String sourceJoiningKeyValue = Optional.ofNullable( childSourceNode.get( joiningKey ) ).map( JsonNode::asText ).orElse( null );
-                        ObjectNode childTargetNode = findChildTargetNode( targetNode, joiningKey, sourceJoiningKeyValue );
+                        ObjectNode childTargetNode = null;
+                        Iterator<String> keys = joiningPath.getKeys().iterator();
+
+                        while ( keys.hasNext() && childTargetNode == null )
+                        {
+                            String joiningKey = keys.next();
+                            String sourceJoiningKeyValue = Optional.ofNullable( childSourceNode.get( joiningKey ) ).map( JsonNode::asText ).orElse( null );
+                            if ( sourceJoiningKeyValue != null )
+                            {
+                                childTargetNode = findChildTargetNode( targetNode, joiningKey, sourceJoiningKeyValue );
+                            }
+                        }
+
+                        if ( childTargetNode == null )
+                        {
+                            childTargetNode = newObjectNode( targetNode );
+                        }
 
                         context.getRecursiveFunction().execute(
                                 ( ObjectNode ) childSourceNode,
@@ -61,17 +77,11 @@ public class ArrayNodeOfObjectsJoiner
 
     private ObjectNode findChildTargetNode( ArrayNode targetNode, String joiningKey, String sourceJoiningKeyValue )
     {
-        if ( sourceJoiningKeyValue == null )
-        {
-            return newObjectNode( targetNode );
-        }
-
-        return StreamSupport.stream( targetNode.spliterator(), false )
-                .filter( c -> c.get( joiningKey ) != null )
-                .filter( childTargetNode -> childTargetNode.get( joiningKey ).asText().equals( sourceJoiningKeyValue ) )
+        return ( ObjectNode ) StreamSupport.stream( targetNode.spliterator(), false )
+                .filter( c -> Objects.nonNull( c.get( joiningKey ) ) )
+                .filter( c -> c.get( joiningKey ).asText().equals( sourceJoiningKeyValue ) )
                 .findFirst()
-                .map( childTargetNode -> ( ObjectNode ) childTargetNode )
-                .orElseGet( () -> newObjectNode( targetNode ) );
+                .orElse( null );
 
     }
 
